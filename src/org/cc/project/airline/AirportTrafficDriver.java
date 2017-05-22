@@ -1,17 +1,23 @@
 package org.cc.project.airline;
 
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.*;
+import org.apache.hadoop.mapred.lib.MultipleInputs;
+
+import java.io.IOException;
 
 public class AirportTrafficDriver {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         JobClient my_client = new JobClient();
         // Create a configuration object for the job
         JobConf job_conf = new JobConf(org.cc.project.airline.AirportTrafficDriver.class);
+        FileSystem fs = FileSystem.get(job_conf);
 
         // Set a name of the Job
         job_conf.setJobName("FlightFrequencyPerAirport");
@@ -31,9 +37,21 @@ public class AirportTrafficDriver {
         // Set input and output directories using command line arguments,
         //arg[0] = name of input directory on HDFS, and arg[1] =  name of output directory to be created to store the output file.
 
-        FileInputFormat.setInputPaths(job_conf, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job_conf, new Path(args[1]));
+        //FileSystem fs = FileSystem.get(new URI("hdfs://localhost:9000/"), conf);
+        int nMap = 0;
+        FileStatus[] fileStatus = fs.listStatus(new Path(args[0]));
 
+        for(FileStatus status : fileStatus){
+            //System.out.println("::::::Path is::::::"+status.getPath());
+            //FileInputFormat.setInputPaths(job_conf, status.getPath());
+            MultipleInputs.addInputPath(job_conf, status.getPath(), TextInputFormat.class,
+                    org.cc.project.airline.AirportTrafficMapper.class);
+            nMap++;
+        }
+
+        job_conf.setNumMapTasks(nMap);
+
+        FileOutputFormat.setOutputPath(job_conf, new Path(args[1]));
         my_client.setConf(job_conf);
         try {
             // Run the job
@@ -42,5 +60,4 @@ public class AirportTrafficDriver {
             e.printStackTrace();
         }
     }
-
 }
