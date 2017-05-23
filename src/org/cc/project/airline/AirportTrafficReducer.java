@@ -40,6 +40,11 @@ public class AirportTrafficReducer extends MapReduceBase implements Reducer<Text
 
     }
 
+    @Override
+    public void close(){
+
+    }
+
 //    public void reduce(Text key, Iterable<IntWritable> values, org.apache.hadoop.mapreduce.Reducer.Context context)
 //            throws IOException, InterruptedException {
 //        int sum = 0;

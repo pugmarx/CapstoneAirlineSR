@@ -1,0 +1,93 @@
+AWS commands
+------------
+
+Mount attached EBS volume
+-
+
+lsblk 
+sudo mkdir /data
+sudo mount /dev/xvdb /data
+cd /data/
+
+
+sudo cp /etc/fstab /etc/fstab.o
+df
+ls -al /dev/disk/by-uuid/
+sudo vim /etc/fstab 
+
+#Entry in fstab: UID=2009-01-14-19-37-02-00	/data	iso9660	defaults,nofail	0
+
+sudo mount -a
+cd /data/
+~~~~~~~~~~~~~
+
+Install Java8
+-----------
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+
+
+
+=====
+
+Instances: 
+i-0b0eaa755ba55ed40 (CCHousekeeper)
+i-0b0eaa755ba55ed40: ec2-54-174-173-73.compute-1.amazonaws.com
+
+~~~~~~~~~~~~~~
+~~~ Hadoop ~~~
+~~~~~~~~~~~~~~
+i-01f00704975c325cc (CCNameNode1)
+i-01f00704975c325cc: ec2-107-20-9-203.compute-1.amazonaws.com
+
+i-01152363631b56606 (CCDataNode1)
+i-01152363631b56606: ec2-54-144-72-215.compute-1.amazonaws.com
+
+i-0e1e262de4c2c514b (CCDataNode2)
+i-0e1e262de4c2c514b: ec2-184-73-149-77.compute-1.amazonaws.com
+~~~~~~~~
+
+
+~~~
+export HADOOP_HOME=/home/ubuntu/hadoop
+export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+~~~
+
+SSH direct acess:
+A solution would be to force the key files to be kept permanently, by adding them in your ~/.ssh/config file:
+IdentityFile ~/pugmarxgmailcom.pem
+
+
+http://ec2-54-172-197-11.compute-1.amazonaws.com:50070/
+
+
+Hadoop execute command:
+hadoop jar CapstoneAirlineSR.jar /inputMapReduce /mapreduce_output_test3
+
+hdfs dfs -cat /mapreduce_output_sales/part-00000
+
+--- passwordless login to Mac ---
+#generate id_rsa:
+ssh-keygen -t rsa
+
+#then copy the corresponding id_rsa.pub's content to ~/.ssh/authorized_keys
+#if there are other _rsa id files, copy the content of their .pub's also to authorized_keys
+#Create ~/.ssh/config, and add:
+IdentityFile ~/.ssh/id_rsa
+
+#also enable remote login from 'Sharing' system setting
+#end
+-----------------
+##FLUME##
+flume-ng agent -c $FLUME_CONF_DIR -f cc-flume-1.conf -n agent
+--------
+
+#### Copy data from mounted dir to hdfs
+
+for f in `find /home/ubuntu/data/aviation/airline_ontime/ -name "*.zip"`; do echo --$f--; y=`basename $f`; z=${y%.zip}.csv; hdfs dfs -copyFromLocal $z airline/raw; rm -f $z;  done;
+
+Working:
+for f in `find /home/ubuntu/data/aviation/airline_ontime/ -name "*.zip"`; do echo --$f--; unzip -o $f; y=`basename $f`; z=${y%.zip}.csv; hdfs dfs -copyFromLocal $z airline/raw; rm -f $z;  done;
