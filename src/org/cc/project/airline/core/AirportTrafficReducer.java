@@ -1,4 +1,4 @@
-package org.cc.project.airline;
+package org.cc.project.airline.core;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;

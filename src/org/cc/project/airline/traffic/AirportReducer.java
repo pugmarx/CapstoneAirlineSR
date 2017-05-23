@@ -1,23 +1,23 @@
-package org.cc.project.airlinenew;
+package org.cc.project.airline.traffic;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
-import java.util.*;
 
 public class AirportReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
     private IntWritable result = new IntWritable();
-    private Map<Text, IntWritable> countMap = new HashMap<>();
+//    private Map<Text, IntWritable> countMap = new HashMap<>();
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
 
         // Skip header keys
-        if (key != null && (key.toString().contains("Origin") || key.toString().contains("Dest"))) {
-            return;
-        }
+//        if (key != null && (key.toString().contains("Origin") || key.toString().contains("Dest"))) {
+//            return;
+//        }
+
 
         int sum = 0;
         for (IntWritable val : values) {
@@ -29,17 +29,19 @@ public class AirportReducer extends Reducer<Text, IntWritable, Text, IntWritable
         //countMap.put(new Text(key), new IntWritable(sum));
     }
 
-  /*  @Override
+    // FIXME ** following is a crude approach to get top 10
+    // FIXME revisit and see if this can be done in a smarter way -- Secondary Sort, Reversing "Key" or something
+   /* @Override
     protected void cleanup(Context context) throws IOException, InterruptedException {
 
         Map<Text, IntWritable> sortedMap = sortByValues(countMap);
 
         int counter = 0;
         for (Text key : sortedMap.keySet()) {
-            if (counter++ == 20) {
-                break;
+            if (counter < 10) {
+                context.write(key, sortedMap.get(key));
+                counter++;
             }
-            context.write(key, sortedMap.get(key));
         }
     }
 
@@ -54,8 +56,6 @@ public class AirportReducer extends Reducer<Text, IntWritable, Text, IntWritable
             }
         });
 
-        //LinkedHashMap will keep the keys in the order they are inserted
-        //which is currently sorted on natural ordering
         Map<K, V> sortedMap = new LinkedHashMap<K, V>();
 
         for (Map.Entry<K, V> entry : entries) {
@@ -63,7 +63,7 @@ public class AirportReducer extends Reducer<Text, IntWritable, Text, IntWritable
         }
 
         return sortedMap;
-    }
-*/
+    }*/
+
 
 }

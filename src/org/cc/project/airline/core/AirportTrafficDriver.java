@@ -1,4 +1,4 @@
-package org.cc.project.airline;
+package org.cc.project.airline.core;
 
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -16,7 +16,7 @@ public class AirportTrafficDriver {
 
         JobClient my_client = new JobClient();
         // Create a configuration object for the job
-        JobConf job_conf = new JobConf(org.cc.project.airline.AirportTrafficDriver.class);
+        JobConf job_conf = new JobConf(AirportTrafficDriver.class);
         FileSystem fs = FileSystem.get(job_conf);
 
         // Set a name of the Job
@@ -27,8 +27,8 @@ public class AirportTrafficDriver {
         job_conf.setOutputValueClass(IntWritable.class);
 
         // Specify names of Mapper and Reducer Class
-        job_conf.setMapperClass(org.cc.project.airline.AirportTrafficMapper.class);
-        job_conf.setReducerClass(org.cc.project.airline.AirportTrafficReducer.class);
+        job_conf.setMapperClass(AirportTrafficMapper.class);
+        job_conf.setReducerClass(AirportTrafficReducer.class);
 
         // Specify formats of the data type of Input and output
         job_conf.setInputFormat(TextInputFormat.class);
@@ -45,7 +45,7 @@ public class AirportTrafficDriver {
             //System.out.println("::::::Path is::::::"+status.getPath());
             //FileInputFormat.setInputPaths(job_conf, status.getPath());
             MultipleInputs.addInputPath(job_conf, status.getPath(), TextInputFormat.class,
-                    org.cc.project.airline.AirportTrafficMapper.class);
+                    AirportTrafficMapper.class);
             nMap++;
         }
 

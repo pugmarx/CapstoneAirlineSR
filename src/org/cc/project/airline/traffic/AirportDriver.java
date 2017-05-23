@@ -1,4 +1,4 @@
-package org.cc.project.airlinenew;
+package org.cc.project.airline.traffic;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
@@ -10,6 +10,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.partition.KeyFieldBasedPartitioner;
 
 
 public class AirportDriver {
@@ -19,8 +20,14 @@ public class AirportDriver {
         Job job = Job.getInstance(conf, "TopNAirportJob");
         job.setJarByClass(AirportDriver.class);
         job.setMapperClass(AirportMapper.class);
-        job.setCombinerClass(AirportReducer.class);
-        job.setReducerClass(AirportReducer.class);
+
+        //job.setCombinerClass(AirportReducer.class);
+        job.setCombinerClass(AirportCombiner.class);
+        job.setPartitionerClass(KeyFieldBasedPartitioner.class);
+
+        //job.setReducerClass(AirportReducer.class);
+        job.setReducerClass(AirportCombiner.class);
+        //job.setNumReduceTasks(1);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
