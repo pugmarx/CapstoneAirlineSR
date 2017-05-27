@@ -18,8 +18,10 @@ public  class AirportMapper extends Mapper<Object, Text, Text, IntWritable>{
         //String[] singleFlightData = valueString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         String[] singleFlightData = valueString.split(",");
 
-        context.write(new Text(singleFlightData[7].replaceAll("\"","")), one);
-        context.write(new Text(singleFlightData[8].replaceAll("\"","")), one);
+        //context.write(new Text(singleFlightData[7].replaceAll("\"","")), one);
+        //context.write(new Text(singleFlightData[8].replaceAll("\"","")), one);
+        context.write(new Text(singleFlightData[8]), one);
+        context.write(new Text(singleFlightData[9]), one);
 
     }
 }
