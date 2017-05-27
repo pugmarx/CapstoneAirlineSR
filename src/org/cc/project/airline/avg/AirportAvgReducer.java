@@ -6,6 +6,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 public class AirportAvgReducer extends Reducer<Text, IntWritable, Text, DoubleWritable> {
 
@@ -19,16 +20,18 @@ public class AirportAvgReducer extends Reducer<Text, IntWritable, Text, DoubleWr
 //        }
 
 
-        int sum = 0;
+        double sum = 0.00d;
         int count = 1;
-        System.err.println("Key:"+key + "Value:"+values);
+        //System.err.println("Key:"+key + "Value:"+values);
         for (IntWritable val : values) {
             sum += val.get();
             count++;
         }
 
-        //result.set(sum/count);
-        result.set(sum/3);
+        double average = sum/count;
+        DecimalFormat df = new DecimalFormat("#.##");
+        //df.format(average);
+        result.set(Double.parseDouble(df.format(average)));
         context.write(key, result);
 
     }
