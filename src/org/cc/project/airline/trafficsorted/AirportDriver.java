@@ -24,10 +24,10 @@ public class AirportDriver {
         Job job2 = Job.getInstance(conf, "SortAndReduce");
 
         job1.setJarByClass(AirportDriver.class);
-        job1.setMapperClass(AirportMapper.class);
-        job1.setCombinerClass(AirportReducer.class);
+        job1.setMapperClass(AirportMapperStep1.class);
+        job1.setCombinerClass(AirportReducerStep1.class);
         job1.setPartitionerClass(KeyFieldBasedPartitioner.class);
-        job1.setReducerClass(AirportReducer.class);
+        job1.setReducerClass(AirportReducerStep1.class);
         job1.setOutputKeyClass(Text.class);
         job1.setOutputValueClass(IntWritable.class);
 
@@ -35,17 +35,36 @@ public class AirportDriver {
         FileStatus[] fileStatus = fs.listStatus(new Path(args[0]));
 
         for(FileStatus status : fileStatus){
-            MultipleInputs.addInputPath(job1, status.getPath(), TextInputFormat.class, AirportMapper.class);
+            MultipleInputs.addInputPath(job1, status.getPath(), TextInputFormat.class, AirportMapperStep1.class);
+        }
+        if(fs.exists(TEMP_PATH)){
+            fs.delete(TEMP_PATH, true);
         }
         FileOutputFormat.setOutputPath(job1, TEMP_PATH);
 
+        //job1.waitForCompletion(true);
 
+        job2.setMapperClass(AirportMapperStep2.class);
+        job2.setMapOutputKeyClass(IntWritable.class);
+        job2.setMapOutputValueClass(Text.class);
+        job2.setReducerClass(AirportReducerStep2.class);
+        job2.setOutputKeyClass(Text.class);
+        job2.setOutputValueClass(IntWritable.class);
 
+        // Reverse sort
+        job2.setSortComparatorClass(AirportTrafficDescComparator.class);
 
+        // Restrict the key count to 10
+        job2.setCombinerClass(AirportCombinerStep2.class);
 
         FileInputFormat.addInputPath(job2, TEMP_PATH);
         FileOutputFormat.setOutputPath(job2, new Path(args[1]));
-        System.exit(job1.waitForCompletion(true) ? 0 : 1);
+
+        if (job1.waitForCompletion(true)) {
+            job2.submit();
+            System.exit(job2.waitForCompletion(true) ? 0 : 1);
+        }
+        //System.exit(job2.waitForCompletion(true) ? 0 : 1);
 
     }
 
