@@ -1,4 +1,4 @@
-package org.cc.project.airline.core;
+package org.cc.project.airline.obs;
 
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;

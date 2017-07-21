@@ -27,8 +27,6 @@ public class AirportDriver {
 
 
         job.setReducerClass(AirportReducer.class);
-        //job.setReducerClass(AirportCombiner.class);
-        //job.setNumReduceTasks(1);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 

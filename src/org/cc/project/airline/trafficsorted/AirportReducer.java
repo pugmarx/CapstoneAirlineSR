@@ -1,4 +1,4 @@
-package org.cc.project.airline.traffic;
+package org.cc.project.airline.trafficsorted;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
@@ -12,6 +12,12 @@ public class AirportReducer extends Reducer<Text, IntWritable, Text, IntWritable
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
 
+        // Skip header keys
+        if (key != null && (key.toString().contains("Origin") || key.toString().contains("Dest"))) {
+            return;
+        }
+
+
         int sum = 0;
         for (IntWritable val : values) {
             sum += val.get();
@@ -19,5 +25,6 @@ public class AirportReducer extends Reducer<Text, IntWritable, Text, IntWritable
         result.set(sum);
         context.write(key, result);
     }
+
 
 }
