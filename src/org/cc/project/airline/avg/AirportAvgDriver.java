@@ -8,40 +8,62 @@ import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 
 public class AirportAvgDriver {
+
+    static final Path TEMP_PATH = new Path("tmp");
+
     public static void main(String[] args) throws Exception {
 
-        System.out.println("******* In the driver ********");
         Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "ArrDelayAvg");
-        job.setJarByClass(AirportAvgDriver.class);
-        job.setMapperClass(AirportAvgMapper.class);
-        job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(IntWritable.class);
-        //job.setCombinerClass(AirportAvgReducer.class);
-        //job.setPartitionerClass(KeyFieldBasedPartitioner.class);
+        Job job1 = Job.getInstance(conf, "ArrDelayAvg");
+        Job job2 = Job.getInstance(conf, "SortAndReduce");
 
+        job1.setJarByClass(AirportAvgDriver.class);
+        job1.setMapperClass(AirportAvgMapper.class);
+        job1.setMapOutputKeyClass(Text.class);
+        job1.setMapOutputValueClass(IntWritable.class);
 
-        job.setReducerClass(AirportAvgReducer.class);
-        job.setOutputKeyClass(Text.class);
+        job1.setReducerClass(AirportAvgReducer.class);
+        job1.setOutputKeyClass(Text.class);
         //job.setOutputValueClass(IntWritable.class);
-        job.setOutputValueClass(DoubleWritable.class);
+        job1.setOutputValueClass(DoubleWritable.class);
 
         FileSystem fs = FileSystem.get(conf);
         FileStatus[] fileStatus = fs.listStatus(new Path(args[0]));
 
         for(FileStatus status : fileStatus){
-            System.out.println("******* input path is ***"+status.getPath());
-            MultipleInputs.addInputPath(job, status.getPath(), TextInputFormat.class, AirportAvgMapper.class);
+            //System.out.println("******* input path is ***"+status.getPath());
+            MultipleInputs.addInputPath(job1, status.getPath(), TextInputFormat.class, AirportAvgMapper.class);
         }
 
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        if(fs.exists(TEMP_PATH)){
+            fs.delete(TEMP_PATH, true);
+        }
+        FileOutputFormat.setOutputPath(job1, TEMP_PATH);
+
+        //System.exit(job1.waitForCompletion(true) ? 0 : 1);
+
+        job2.setMapperClass(AirportAvgMapperStep2.class);
+        job2.setMapOutputKeyClass(DoubleWritable.class);
+        job2.setMapOutputValueClass(Text.class);
+        job2.setReducerClass(AirportAvgReducerStep2.class);
+        job2.setOutputKeyClass(Text.class);
+        job2.setOutputValueClass(DoubleWritable.class);
+        job2.setCombinerClass(AirportAvgCombinerStep2.class);
+
+        FileInputFormat.addInputPath(job2, TEMP_PATH);
+        FileOutputFormat.setOutputPath(job2, new Path(args[1]));
+
+        if (job1.waitForCompletion(true)) {
+            job2.submit();
+            System.exit(job2.waitForCompletion(true) ? 0 : 1);
+        }
 
     }
 

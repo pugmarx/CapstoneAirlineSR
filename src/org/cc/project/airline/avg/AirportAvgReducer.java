@@ -14,11 +14,6 @@ public class AirportAvgReducer extends Reducer<Text, IntWritable, Text, DoubleWr
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
 
-//        // Skip header keys
-//        if (key != null && (key.toString().contains("Origin") || key.toString().contains("Dest"))) {
-//            return;
-//        }
-
 
         double sum = 0.00d;
         int count = 1;

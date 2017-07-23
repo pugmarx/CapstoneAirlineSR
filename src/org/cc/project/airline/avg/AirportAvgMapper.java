@@ -24,11 +24,11 @@ public class AirportAvgMapper extends Mapper<Object, Text, Text, IntWritable> {
         String[] singleFlightData = valueString.split(",");
 
         IntWritable val = new IntWritable(0);
-        //System.err.println("******"+singleFlightData[6]+"------->"+singleFlightData[18]);
+
         try {
-            int arrDel = singleFlightData[16].length() != 0 ? Double.valueOf(singleFlightData[16]).intValue() : 0;
+            int arrDel = singleFlightData[10].length() != 0 ? Double.valueOf(singleFlightData[10]).intValue() : 0;
             val.set(arrDel);
-            context.write(new Text(singleFlightData[5]), val);
+            context.write(new Text(singleFlightData[4]), val);
         } catch (NumberFormatException e) {
             //e.printStackTrace();
             //ignore
