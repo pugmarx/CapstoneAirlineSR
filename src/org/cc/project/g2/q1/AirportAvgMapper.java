@@ -25,17 +25,13 @@ public class AirportAvgMapper extends Mapper<Object, Text, AirportCarrierKey, In
         IntWritable val = new IntWritable(0);
 
         try {
+
             int depDelay = singleFlightData[8].length() != 0 ? Double.valueOf(singleFlightData[8]).intValue() : 0;
             val.set(depDelay);
-
             AirportCarrierKey acKey = new AirportCarrierKey(new Text(singleFlightData[6]), new Text(singleFlightData[4]));
-
             context.write(acKey, val);
-            //context.write(new Text(singleFlightData[4]), val);
+
         } catch (NumberFormatException e) {
-            //e.printStackTrace();
-            //ignore
-            //return;
         }
     }
 }

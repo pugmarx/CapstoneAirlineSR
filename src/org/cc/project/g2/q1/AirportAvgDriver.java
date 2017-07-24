@@ -6,7 +6,10 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -19,8 +22,8 @@ public class AirportAvgDriver {
     public static void main(String[] args) throws Exception {
 
         Configuration conf = new Configuration();
-        Job job1 = Job.getInstance(conf, "ArrDelayAvg");
-        //Job job2 = Job.getInstance(conf, "SortAndReduce");
+        Job job1 = Job.getInstance(conf, "OriginDepDelayAvg");
+        Job job2 = Job.getInstance(conf, "SortAndReduce");
 
         job1.setJarByClass(AirportAvgDriver.class);
         job1.setMapperClass(AirportAvgMapper.class);
@@ -45,15 +48,21 @@ public class AirportAvgDriver {
         }
         FileOutputFormat.setOutputPath(job1, TEMP_PATH);
 
-        System.exit(job1.waitForCompletion(true) ? 0 : 1);
+        //System.exit(job1.waitForCompletion(true) ? 0 : 1);
 
-    /*    job2.setMapperClass(AirportAvgMapperStep2.class);
-        job2.setMapOutputKeyClass(DoubleWritable.class);
-        job2.setMapOutputValueClass(Text.class);
+        job2.setMapperClass(AirportAvgMapperStep2.class);
+        job2.setMapOutputKeyClass(Text.class);
+        job2.setMapOutputValueClass(NullWritable.class);
         job2.setReducerClass(AirportAvgReducerStep2.class);
         job2.setOutputKeyClass(Text.class);
-        job2.setOutputValueClass(DoubleWritable.class);
-        job2.setCombinerClass(AirportAvgCombinerStep2.class);
+        job2.setOutputValueClass(NullWritable.class);
+
+        // *** New classes
+        job2.setPartitionerClass(AirportCarrierPartitioner.class);
+        job2.setSortComparatorClass(AirportAvgKeyComparator.class);
+        //job2.setGroupingComparatorClass(AirportAvgGroupComparator.class);
+
+        //job2.setCombinerClass(AirportAvgCombinerStep2.class);
 
         FileInputFormat.addInputPath(job2, TEMP_PATH);
         FileOutputFormat.setOutputPath(job2, new Path(args[1]));
@@ -62,7 +71,7 @@ public class AirportAvgDriver {
             job2.submit();
             System.exit(job2.waitForCompletion(true) ? 0 : 1);
         }
-*/
+
     }
 
 }

@@ -15,7 +15,6 @@ public class AirportAvgCombinerStep2 extends Reducer<DoubleWritable, Text, Doubl
         nCount = 0;
     }
 
-
     public void reduce(DoubleWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
         if(nCount < 10) {
             for (Text t : values) {
