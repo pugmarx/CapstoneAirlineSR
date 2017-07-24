@@ -1,4 +1,4 @@
-package org.cc.project.airline.avg;
+package org.cc.project.g2.q1;
 
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;

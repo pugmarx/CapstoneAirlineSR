@@ -1,4 +1,4 @@
-package org.cc.project.airline.trafficsorted;
+package org.cc.project.prac.traffic;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
@@ -6,7 +6,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 
-public class AirportReducerStep1 extends Reducer<Text, IntWritable, Text, IntWritable> {
+public class AirportReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
     private IntWritable result = new IntWritable();
 
@@ -19,6 +19,5 @@ public class AirportReducerStep1 extends Reducer<Text, IntWritable, Text, IntWri
         result.set(sum);
         context.write(key, result);
     }
-
 
 }

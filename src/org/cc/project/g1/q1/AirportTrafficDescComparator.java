@@ -1,4 +1,4 @@
-package org.cc.project.airline.trafficsorted;
+package org.cc.project.g1.q1;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.WritableComparable;

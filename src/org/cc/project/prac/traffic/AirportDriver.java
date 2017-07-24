@@ -1,4 +1,4 @@
-package org.cc.project.airline.traffic;
+package org.cc.project.prac.traffic;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;

@@ -1,4 +1,4 @@
-package org.cc.project.airline.traffic;
+package org.cc.project.prac.traffic;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
