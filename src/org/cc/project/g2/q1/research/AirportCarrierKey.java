@@ -1,4 +1,4 @@
-package org.cc.project.g2.q1;
+package org.cc.project.g2.q1.research;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;

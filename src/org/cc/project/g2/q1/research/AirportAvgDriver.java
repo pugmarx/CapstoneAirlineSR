@@ -1,4 +1,4 @@
-package org.cc.project.g2.q1;
+package org.cc.project.g2.q1.research;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -29,6 +29,7 @@ public class AirportAvgDriver {
         Job job1 = Job.getInstance(conf, "OriginDepDelayAvg");
         Job job2 = Job.getInstance(conf, "SortAndReduce");
 
+//      String originCode = System.getProperty(ORIGIN_CODE_PROP);
         if (args.length > 2 && StringUtils.isNotBlank(args[2])) {
             job1.getConfiguration().set(ORIGIN_CODE_PROP, args[2]);
         }
@@ -70,8 +71,7 @@ public class AirportAvgDriver {
         job2.setPartitionerClass(AirportCarrierPartitioner.class);
         job2.setSortComparatorClass(AirportAvgKeyComparatorStep2.class);
         //job2.setGroupingComparatorClass(AirportAvgGroupComparator.class);
-        //job2.setCombinerKeyGroupingComparatorClass(AirportAvgGroupComparator.class);
-        //job2.setCombinerClass(AirportAvgCombinerStep2.class);
+        job2.setCombinerClass(AirportAvgCombinerStep2.class);
         //job2.setNumReduceTasks(3);
 
         FileInputFormat.addInputPath(job2, TEMP_PATH);

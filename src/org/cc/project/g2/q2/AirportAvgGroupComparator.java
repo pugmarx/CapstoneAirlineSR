@@ -1,4 +1,4 @@
-package org.cc.project.g2.q1;
+package org.cc.project.g2.q2;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
@@ -22,13 +22,6 @@ public class AirportAvgGroupComparator extends WritableComparator {
         String[] s2Arr = ip2.toString().split(",");
 
         // Check if the origin matches
-        //return s1Arr[0].compareTo(s2Arr[0]);
-        int c1 = s1Arr[0].compareTo(s2Arr[0]);
-        //if (c1 != 0) {
-            return c1;
-        //}
-
-        //return s1Arr[1].compareTo(s2Arr[1]);
-
+        return s1Arr[0].compareTo(s2Arr[0]);
     }
 }

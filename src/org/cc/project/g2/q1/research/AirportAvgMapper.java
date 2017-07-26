@@ -1,4 +1,4 @@
-package org.cc.project.g2.q1;
+package org.cc.project.g2.q1.research;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.IntWritable;
