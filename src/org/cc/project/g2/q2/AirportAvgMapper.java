@@ -1,11 +1,12 @@
 package org.cc.project.g2.q2;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
-
+import static org.cc.project.common.misc.AirlineConstants.*;
 
 public class AirportAvgMapper extends Mapper<Object, Text, AirportDestinationKey, IntWritable> {
 
@@ -19,16 +20,25 @@ public class AirportAvgMapper extends Mapper<Object, Text, AirportDestinationKey
     // ****************************
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
+        String originCodeProp = context.getConfiguration().get(ORIGIN_CODE_PROP);
+
         String valueString = value.toString();
         String[] singleFlightData = valueString.split(",");
-
         IntWritable val = new IntWritable(0);
 
         try {
+            String origin = singleFlightData[ORIGIN_INDEX];
 
-            int depDelay = singleFlightData[8].length() != 0 ? Double.valueOf(singleFlightData[8]).intValue() : 0;
+            // Discontinue if invalid
+            if (StringUtils.isNotBlank(originCodeProp) && !StringUtils.contains(originCodeProp, origin)) {
+                return;
+            }
+
+            int depDelay = singleFlightData[DEP_DELAY_INDEX].length() != 0 ?
+                    Double.valueOf(singleFlightData[DEP_DELAY_INDEX]).intValue() : 0;
             val.set(depDelay);
-            AirportDestinationKey acKey = new AirportDestinationKey(new Text(singleFlightData[6]), new Text(singleFlightData[7]));
+            AirportDestinationKey acKey = new AirportDestinationKey(new Text(origin),
+                    new Text(singleFlightData[DEST_INDEX]));
             context.write(acKey, val);
 
         } catch (NumberFormatException e) {

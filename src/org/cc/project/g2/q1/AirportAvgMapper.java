@@ -7,7 +7,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
 
-import static org.cc.project.common.utils.misc.AirlineConstants.*;
+import static org.cc.project.common.misc.AirlineConstants.*;
 
 
 public class AirportAvgMapper extends Mapper<Object, Text, AirportCarrierKey, IntWritable> {

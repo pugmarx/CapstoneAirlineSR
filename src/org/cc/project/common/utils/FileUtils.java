@@ -1,4 +1,4 @@
-package org.cc.project.common.utils.utils;
+package org.cc.project.common.utils;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.fs.FileSystem;
@@ -50,11 +50,14 @@ public class FileUtils {
 
     public static void main(String[] s) throws Exception {
         String first = "ABE,DEF,302";
-        String second = "ACF,DHF,02";
-        System.out.println(Math.abs(first.split(",")[0].hashCode()) * 127 % 3);
-        System.out.println(Math.abs(second.split(",")[0].hashCode()) * 127 % 3);
-        System.out.println(Math.abs(first.split(",")[0].hashCode()/10000) * 3 % 4);
-        System.out.println(Math.abs(second.split(",")[0].hashCode()/10000) * 3 % 4);
+        String second = "ABF,DHF,02";
+        String third = "BOS,DHF,02";
+        System.out.println(Math.abs(first.split(",")[0].hashCode()) * 127 % 2);
+        System.out.println(Math.abs(second.split(",")[0].hashCode()) * 127 % 2);
+        System.out.println(Math.abs(third.split(",")[0].hashCode()) * 127 % 2);
+        System.out.println(Math.abs(first.split(",")[0].hashCode()/10000) * 3 % 2);
+        System.out.println(Math.abs(second.split(",")[0].hashCode()/10000) * 3 % 2);
+        System.out.println(Math.abs(third.split(",")[0].hashCode()/10000) * 3 % 2);
 
         System.out.println(1998 * 7 % 4);
         System.out.println(1999 * 7 % 4);

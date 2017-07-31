@@ -13,10 +13,10 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-import org.cc.project.common.utils.utils.FileUtils;
+import org.cc.project.common.utils.FileUtils;
 
-import static org.cc.project.common.utils.misc.AirlineConstants.ORIGIN_CODE_PROP;
-import static org.cc.project.common.utils.misc.AirlineConstants.TEMP_DIR;
+import static org.cc.project.common.misc.AirlineConstants.ORIGIN_CODE_PROP;
+import static org.cc.project.common.misc.AirlineConstants.TEMP_DIR;
 
 
 public class AirportAvgDriver {

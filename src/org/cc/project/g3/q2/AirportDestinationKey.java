@@ -1,4 +1,4 @@
-package org.cc.project.g2.q1.research;
+package org.cc.project.g3.q2;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
@@ -10,42 +10,49 @@ import java.io.IOException;
 /**
  * Created by Hobbes on 24/07/17.
  */
-public class AirportCarrierKey implements WritableComparable<AirportCarrierKey> {
+public class AirportDestinationKey implements WritableComparable<AirportDestinationKey> {
 
-    Text origin;
-    Text carrier;
+    private Text origin;
+    private Text destination;
+    //private Double meanArrDelay;
 
-    public AirportCarrierKey(Text origin, Text carrier) {
+//    public void setMeanArrDelay(Double meanArrDelay) {
+//        this.meanArrDelay = meanArrDelay;
+//    }
+
+    public AirportDestinationKey(Text origin, Text destination) {
         this.origin = origin;
-        this.carrier = carrier;
+        this.destination = destination;
+       // this.meanArrDelay = 0.00d;
     }
 
     @SuppressWarnings("unused")
     // required for implicit call
-    public AirportCarrierKey() {
+    public AirportDestinationKey() {
         this.origin = new Text();
-        this.carrier = new Text();
+        this.destination = new Text();
+        //this.meanArrDelay = 0.00d;
     }
 
     @Override
     public void write(DataOutput dataOutput) throws IOException {
         this.origin.write(dataOutput);
-        this.carrier.write(dataOutput);
+        this.destination.write(dataOutput);
     }
 
     @Override
     public void readFields(DataInput dataInput) throws IOException {
         this.origin.readFields(dataInput);
-        this.carrier.readFields(dataInput);
+        this.destination.readFields(dataInput);
     }
 
     @Override
     public String toString() {
-        return origin + "," + carrier;
+        return origin + "," + destination;
     }
 
     @Override
-    public int compareTo(AirportCarrierKey o) {
+    public int compareTo(AirportDestinationKey o) {
         if (null == o) {
             return 0;
         }
@@ -53,7 +60,7 @@ public class AirportCarrierKey implements WritableComparable<AirportCarrierKey> 
         if (intOrigin != 0) {
             return intOrigin;
         } else {
-            return carrier.compareTo(o.carrier);
+            return destination.compareTo(o.destination);
         }
     }
 
@@ -62,16 +69,16 @@ public class AirportCarrierKey implements WritableComparable<AirportCarrierKey> 
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AirportCarrierKey that = (AirportCarrierKey) o;
+        AirportDestinationKey that = (AirportDestinationKey) o;
 
         if (origin != null ? !origin.equals(that.origin) : that.origin != null) return false;
-        return carrier != null ? carrier.equals(that.carrier) : that.carrier == null;
+        return destination != null ? destination.equals(that.destination) : that.destination == null;
     }
 
     @Override
     public int hashCode() {
         int result = origin != null ? origin.hashCode() : 0;
-        result = 31 * result + (carrier != null ? carrier.hashCode() : 0);
+        result = 31 * result + (destination != null ? destination.hashCode() : 0);
         return result;
     }
 }
