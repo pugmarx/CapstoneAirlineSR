@@ -105,8 +105,9 @@ public class Validator {
      * @return
      */
     public boolean isValidLeg2Date(String l2DateInputStr) {
+        SimpleDateFormat inputSDF = new SimpleDateFormat(AirlineConstants.FLT_DATE_INPUT_FORMAT);
         try {
-            Date l2DateInput = sdf.parse(l2DateInputStr);
+            Date l2DateInput = inputSDF.parse(l2DateInputStr);
             Calendar cal = Calendar.getInstance();
             cal.setTime(l2DateInput);
 
@@ -130,32 +131,35 @@ public class Validator {
     /**
      * 2008
      *
-     * @param l1DateInputStr
+     * @param flightDateStr
      * @return
      */
-    public boolean isValidLeg1Date(String l1DateInputStr) {
+    public boolean isValidLeg1Date(String flightDateStr) {
+        SimpleDateFormat inputSDF = new SimpleDateFormat(AirlineConstants.FLT_DATE_INPUT_FORMAT);
         try {
-            Date l1DateInput = sdf.parse(l1DateInputStr);
+            Date fltDate = inputSDF.parse(flightDateStr);
             Calendar cal = Calendar.getInstance();
-            cal.setTime(l1DateInput);
+            cal.setTime(fltDate);
 
             if (cal.get(Calendar.YEAR) != 2008) {
                 return false;
             }
+            return fltDate.equals(leg1Date);
+
         } catch (ParseException e) {
             return false;
         }
-        return true;
     }
 
 
     public static void main(String s[]) throws Exception {
         String inpDate = "17/01/2008";
         String wrongL1Date = "02/04/2009";
+        String rightL1Date = "2008-01-17";
         String rightL1Time = "1159";
-        String wrongL1Time = "1448";
+        String wrongL1Time = "1530";
         String wrongL2Date = "18/01/2008";
-        String rightL2Date = "19/01/2008";
+        String rightL2Date = "2008-01-19";
         String wrongL2Time = "1159";
         String rightL2Time = "1359";
 
@@ -164,13 +168,16 @@ public class Validator {
         System.out.println("Leg2 date calculated ---> " + v.getLeg2Date());
 
         System.out.println("1 NO ---> " + v.isValidLeg1Date(wrongL1Date));
-        System.out.println("2 Yes ---> " + v.isValidLeg1Date(rightL2Date));
+        System.out.println("2 Yes ---> " + v.isValidLeg1Date(rightL1Date));
         System.out.println("3 No ---> " + v.isValidLeg2Date(wrongL2Date));
         System.out.println("4 Yes ---> " + v.isValidLeg2Date(rightL2Date));
         System.out.println("5 No ---> " + v.isValidLeg1Time(wrongL1Time));
         System.out.println("6 Yes ---> " + v.isValidLeg1Time(rightL1Time));
         System.out.println("7 No ---> " + v.isValidLeg2Time(wrongL2Time));
         System.out.println("8 Yes ---> " + v.isValidLeg2Time(rightL2Time));
+
+
+        //AirportAvgDriver.validateInputs(new String[]{"a", "b", "c", "d", "e", "04/03/2008"});
 
     }
 
