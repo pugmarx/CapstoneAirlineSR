@@ -1,11 +1,9 @@
 package org.cc.project.g3.q2;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-
 
 import java.io.IOException;
 
@@ -41,8 +39,8 @@ public class AirportLegMapper extends Mapper<Object, Text, AirportDestinationKey
             Text depTime = new Text(singleFlightData[DEP_TIME_INDEX]);
             Text airline = new Text(singleFlightData[UNIQUE_CARRIER_INDEX]);
             Text fltNum = new Text(singleFlightData[FLIGHT_NUM_INDEX]);
-            int depDelay = singleFlightData[DEP_DELAY_INDEX].length() != 0 ?
-                    Double.valueOf(singleFlightData[DEP_DELAY_INDEX]).intValue() : 0;
+            //int depDelay = singleFlightData[DEP_DELAY_INDEX].length() != 0 ?
+            //        Double.valueOf(singleFlightData[DEP_DELAY_INDEX]).intValue() : 0;
             int arrDelay = singleFlightData[ARR_DELAY_INDEX].length() != 0 ?
                     Double.valueOf(singleFlightData[ARR_DELAY_INDEX]).intValue() : 0;
 
@@ -64,8 +62,10 @@ public class AirportLegMapper extends Mapper<Object, Text, AirportDestinationKey
                 }
             }
 
+            //AirportDestinationKey legKey = new AirportDestinationKey(origin, dest,
+            //        new IntWritable(depDelay + arrDelay), airline, fltNum, depTime, fltDate);
             AirportDestinationKey legKey = new AirportDestinationKey(origin, dest,
-                    new IntWritable(depDelay + arrDelay), airline, fltNum, depTime, fltDate);
+                    new IntWritable(arrDelay), airline, fltNum, depTime, fltDate);
             context.write(legKey, NullWritable.get());
 
         } catch (NumberFormatException e) {

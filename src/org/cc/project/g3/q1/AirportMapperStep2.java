@@ -1,4 +1,4 @@
-package org.cc.project.g1.q1;
+package org.cc.project.g3.q1;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.NullWritable;

@@ -14,16 +14,11 @@ public class AirportDestinationKey implements WritableComparable<AirportDestinat
 
     private Text origin;
     private Text destination;
-    //private Double meanArrDelay;
 
-//    public void setMeanArrDelay(Double meanArrDelay) {
-//        this.meanArrDelay = meanArrDelay;
-//    }
 
     public AirportDestinationKey(Text origin, Text destination) {
         this.origin = origin;
         this.destination = destination;
-       // this.meanArrDelay = 0.00d;
     }
 
     @SuppressWarnings("unused")
@@ -31,7 +26,6 @@ public class AirportDestinationKey implements WritableComparable<AirportDestinat
     public AirportDestinationKey() {
         this.origin = new Text();
         this.destination = new Text();
-        //this.meanArrDelay = 0.00d;
     }
 
     @Override

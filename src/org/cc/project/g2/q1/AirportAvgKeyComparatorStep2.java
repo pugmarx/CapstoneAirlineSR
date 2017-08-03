@@ -32,6 +32,7 @@ public class AirportAvgKeyComparatorStep2 extends WritableComparator {
             return cmp;
         }
 
+        // Sort by avg delay
         cmp = Double.compare(Double.valueOf(s1Arr[2]), Double.valueOf(s2Arr[2]));
         if (cmp != 0) {
             return cmp;

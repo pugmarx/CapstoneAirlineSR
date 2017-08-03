@@ -1,12 +1,11 @@
 package org.cc.project.g1.q1;
 
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 
-public class AirportCombinerStep2 extends Reducer<IntWritable, Text, IntWritable, Text> {
+public class AirportCombinerStep2 extends Reducer<AirportKeyStep2, NullWritable, AirportKeyStep2, NullWritable> {
 
     int nCount = 0;
 
@@ -16,13 +15,10 @@ public class AirportCombinerStep2 extends Reducer<IntWritable, Text, IntWritable
     }
 
 
-    public void reduce(IntWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-        if(nCount < 10) {
-            for (Text t : values) {
-                context.write(key, t);
-                nCount++;
-            }
+    public void reduce(AirportKeyStep2 key, Iterable<NullWritable> values, Context context) throws IOException, InterruptedException {
+        if (nCount < 10) {
+            context.write(key, NullWritable.get());
+            nCount++;
         }
     }
-
 }

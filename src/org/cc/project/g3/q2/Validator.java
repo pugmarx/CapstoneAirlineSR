@@ -36,13 +36,7 @@ public class Validator {
     }
 
 
-    /**
-     * Before 12 PM on the given date
-     *
-     * @param timeStr
-     * @return
-     */
-    public boolean isValidLeg1Time(String timeStr) {
+    public boolean isValidLegTime(String timeStr, boolean isBefore12) {
         SimpleDateFormat depDateFormat = new SimpleDateFormat(AirlineConstants.FLT_DATE_PROP_FORMAT
                 + TIME_FORMAT);
         Calendar cal1 = Calendar.getInstance();
@@ -56,15 +50,24 @@ public class Validator {
             allowedCal.set(Calendar.HOUR_OF_DAY, 12);
             allowedCal.set(Calendar.MINUTE, 0);
 
-            if (cal1.before(allowedCal)) {
-                return true;
+            if (isBefore12) {
+                return cal1.before(allowedCal);
             }
-
+            return cal1.after(allowedCal);
         } catch (ParseException pe) {
             //pe.printStackTrace();
             return false;
         }
-        return false;
+    }
+
+    /**
+     * Before 12 PM on the given date
+     *
+     * @param timeStr
+     * @return
+     */
+    public boolean isValidLeg1Time(String timeStr) {
+        return isValidLegTime(timeStr, true);
     }
 
     /**
@@ -74,50 +77,36 @@ public class Validator {
      * @return
      */
     public boolean isValidLeg2Time(String timeStr) {
-        SimpleDateFormat depDateFormat = new SimpleDateFormat(AirlineConstants.FLT_DATE_PROP_FORMAT
-                + TIME_FORMAT);
-        Calendar cal1 = Calendar.getInstance();
+        return isValidLegTime(timeStr, false);
+    }
 
+    private boolean isValidLegDate(String flightDateStr, boolean isLeg1) {
+        SimpleDateFormat inputSDF = new SimpleDateFormat(AirlineConstants.FLT_DATE_INPUT_FORMAT);
         try {
-            String depDateWithTime = sdf.format(leg2Date) + timeStr;
-            Date depDate = depDateFormat.parse(depDateWithTime);
-            cal1.setTime(depDate);
+            Date fltDate = inputSDF.parse(flightDateStr);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(fltDate);
 
-            Calendar allowedCal = (Calendar) cal1.clone();
-            allowedCal.set(Calendar.HOUR_OF_DAY, 12);
-            allowedCal.set(Calendar.MINUTE, 0);
-
-            if (cal1.after(allowedCal)) {
-                return true;
+            if (cal.get(Calendar.YEAR) != 2008) {
+                return false;
             }
-
-        } catch (ParseException pe) {
-            //pe.printStackTrace();
+            if (isLeg1) {
+                return fltDate.equals(leg1Date);
+            }
+            return fltDate.equals(leg2Date);
+        } catch (ParseException e) {
             return false;
         }
-        return false;
     }
 
     /**
      * 2 days after L1 date
      *
-     * @param l2DateInputStr
+     * @param flightDateStr
      * @return
      */
-    public boolean isValidLeg2Date(String l2DateInputStr) {
-        SimpleDateFormat inputSDF = new SimpleDateFormat(AirlineConstants.FLT_DATE_INPUT_FORMAT);
-        try {
-            Date l2DateInput = inputSDF.parse(l2DateInputStr);
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(l2DateInput);
-
-            if (cal.get(Calendar.YEAR) != 2008) {
-                return false;
-            }
-            return l2DateInput.equals(leg2Date);
-        } catch (ParseException e) {
-            return false;
-        }
+    public boolean isValidLeg2Date(String flightDateStr) {
+        return isValidLegDate(flightDateStr, false);
     }
 
     private Date getLeg2Date() {
@@ -135,20 +124,7 @@ public class Validator {
      * @return
      */
     public boolean isValidLeg1Date(String flightDateStr) {
-        SimpleDateFormat inputSDF = new SimpleDateFormat(AirlineConstants.FLT_DATE_INPUT_FORMAT);
-        try {
-            Date fltDate = inputSDF.parse(flightDateStr);
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(fltDate);
-
-            if (cal.get(Calendar.YEAR) != 2008) {
-                return false;
-            }
-            return fltDate.equals(leg1Date);
-
-        } catch (ParseException e) {
-            return false;
-        }
+        return isValidLegDate(flightDateStr, true);
     }
 
 
@@ -177,6 +153,8 @@ public class Validator {
         System.out.println("8 Yes ---> " + v.isValidLeg2Time(rightL2Time));
 
 
+        //System.out.println("isValidLeg2Time " + isValidLeg2Time("1159", "2008-12-01"));
+        //System.out.println("isValidLeg2Time " + isValidLeg2Time("1201", "2008-12-01"));
         //AirportAvgDriver.validateInputs(new String[]{"a", "b", "c", "d", "e", "04/03/2008"});
 
     }
