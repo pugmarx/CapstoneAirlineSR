@@ -29,8 +29,8 @@ public class AirportKeyStep2 implements WritableComparable<AirportKeyStep2> {
         if (null == o) {
             return 0;
         }
-        // Reverse sort by value
-        int cmp = (-1) * arrivalDelay.compareTo(o.arrivalDelay);
+        // Sort by value
+        int cmp = arrivalDelay.compareTo(o.arrivalDelay);
         if (cmp != 0) {
             return cmp;
         }
