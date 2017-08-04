@@ -40,20 +40,9 @@ public class AirportDriver {
         }
         FileUtils.createJobOutputPath(job1, TEMP_PATH, true);
 
-
-        job2.setMapperClass(AirportMapperStep2.class);
+        job2.setMapperClass(TopTenMapperStep2.class);
         job2.setMapOutputKeyClass(AirportKeyStep2.class);
         job2.setMapOutputValueClass(NullWritable.class);
-        job2.setReducerClass(AirportReducerStep2.class);
-        job2.setOutputKeyClass(AirportKeyStep2.class);
-        job2.setOutputValueClass(NullWritable.class);
-;
-
-        // Reverse sort
-        //job2.setSortComparatorClass(AirportTrafficDescComparator.class);
-
-        // Restrict the key count to 10
-        job2.setCombinerClass(AirportCombinerStep2.class);
 
         FileInputFormat.addInputPath(job2, TEMP_PATH);
         FileUtils.createJobOutputPath(job2, args[1], true);

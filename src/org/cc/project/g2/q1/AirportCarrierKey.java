@@ -1,5 +1,6 @@
 package org.cc.project.g2.q1;
 
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
 
@@ -15,9 +16,13 @@ public class AirportCarrierKey implements WritableComparable<AirportCarrierKey> 
     Text origin;
     Text carrier;
 
+
+    DoubleWritable avgDepDelay;
+
     public AirportCarrierKey(Text origin, Text carrier) {
         this.origin = origin;
         this.carrier = carrier;
+        this.avgDepDelay = new DoubleWritable(0);
     }
 
     @SuppressWarnings("unused")
@@ -25,23 +30,30 @@ public class AirportCarrierKey implements WritableComparable<AirportCarrierKey> 
     public AirportCarrierKey() {
         this.origin = new Text();
         this.carrier = new Text();
+        this.avgDepDelay = new DoubleWritable(0);
+    }
+
+    public void setAvgDepDelay(DoubleWritable avgDepDelay) {
+        this.avgDepDelay = avgDepDelay;
     }
 
     @Override
     public void write(DataOutput dataOutput) throws IOException {
         this.origin.write(dataOutput);
         this.carrier.write(dataOutput);
+        this.avgDepDelay.write(dataOutput);
     }
 
     @Override
     public void readFields(DataInput dataInput) throws IOException {
         this.origin.readFields(dataInput);
         this.carrier.readFields(dataInput);
+        this.avgDepDelay.readFields(dataInput);
     }
 
     @Override
     public String toString() {
-        return origin + "," + carrier;
+        return origin + "," + carrier + "," + avgDepDelay;
     }
 
     @Override
@@ -52,9 +64,14 @@ public class AirportCarrierKey implements WritableComparable<AirportCarrierKey> 
         int intOrigin = origin.compareTo(o.origin);
         if (intOrigin != 0) {
             return intOrigin;
-        } else {
-            return carrier.compareTo(o.carrier);
         }
+        int intDepDel = avgDepDelay.compareTo(o.avgDepDelay);
+        if (intDepDel != 0) {
+            return intDepDel;
+        }
+
+        return carrier.compareTo(o.carrier);
+
     }
 
     @Override

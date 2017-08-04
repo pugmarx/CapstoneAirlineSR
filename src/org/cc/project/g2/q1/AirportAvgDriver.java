@@ -35,14 +35,11 @@ public class AirportAvgDriver {
 
         job1.setJarByClass(AirportAvgDriver.class);
         job1.setMapperClass(AirportAvgMapper.class);
-        //job1.setMapOutputKeyClass(Text.class);
         job1.setMapOutputKeyClass(AirportCarrierKey.class);
         job1.setMapOutputValueClass(IntWritable.class);
-
         job1.setReducerClass(AirportAvgReducer.class);
-        //job1.setOutputKeyClass(Text.class);
-        job1.setMapOutputKeyClass(AirportCarrierKey.class);
-        job1.setOutputValueClass(DoubleWritable.class);
+        job1.setOutputKeyClass(AirportCarrierKey.class);
+        job1.setOutputValueClass(NullWritable.class);
 
         FileSystem fs = FileSystem.get(conf);
         FileStatus[] fileStatus = fs.listStatus(new Path(args[0]));
@@ -51,28 +48,11 @@ public class AirportAvgDriver {
             MultipleInputs.addInputPath(job1, status.getPath(), TextInputFormat.class, AirportAvgMapper.class);
         }
 
-        if (fs.exists(TEMP_PATH)) {
-            fs.delete(TEMP_PATH, true);
-        }
-        //FileOutputFormat.setOutputPath(job1, TEMP_PATH);
         FileUtils.createJobOutputPath(job1, TEMP_PATH, true);
 
-        //System.exit(job1.waitForCompletion(true) ? 0 : 1);
-
-        job2.setMapperClass(AirportAvgMapperStep2.class);
-        job2.setMapOutputKeyClass(Text.class);
+        job2.setMapperClass(TopTenMapperStep2.class);
+        job2.setMapOutputKeyClass(AirportCarrierKey.class);
         job2.setMapOutputValueClass(NullWritable.class);
-        job2.setReducerClass(AirportAvgReducerStep2.class);
-        job2.setOutputKeyClass(Text.class);
-        job2.setOutputValueClass(NullWritable.class);
-
-        // *** New classes
-        job2.setPartitionerClass(AirportCarrierPartitioner.class);
-        job2.setSortComparatorClass(AirportAvgKeyComparatorStep2.class);
-        //job2.setGroupingComparatorClass(AirportAvgGroupComparator.class);
-        //job2.setCombinerKeyGroupingComparatorClass(AirportAvgGroupComparator.class);
-        //job2.setCombinerClass(AirportAvgCombinerStep2.class);
-        //job2.setNumReduceTasks(3);
 
         FileInputFormat.addInputPath(job2, TEMP_PATH);
         FileUtils.createJobOutputPath(job2, args[1], true);
@@ -80,6 +60,7 @@ public class AirportAvgDriver {
         if (job1.waitForCompletion(true)) {
             job2.submit();
             System.exit(job2.waitForCompletion(true) ? 0 : 1);
+            System.exit(0);
         }
 
     }
