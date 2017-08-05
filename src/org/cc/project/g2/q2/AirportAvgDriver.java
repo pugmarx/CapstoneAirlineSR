@@ -50,6 +50,7 @@ public class AirportAvgDriver {
 
         job2.setMapperClass(TopTenMapperStep2.class);
         job2.setMapOutputKeyClass(AirportDestinationKey.class);
+        job2.setOutputKeyClass(AirportDestinationKey.class);
         job2.setMapOutputValueClass(NullWritable.class);
         // * No reducer needed *
 
@@ -59,9 +60,6 @@ public class AirportAvgDriver {
         if (job1.waitForCompletion(true)) {
             job2.submit();
             System.exit(job2.waitForCompletion(true) ? 0 : 1);
-            System.exit(0);
         }
-
     }
-
 }

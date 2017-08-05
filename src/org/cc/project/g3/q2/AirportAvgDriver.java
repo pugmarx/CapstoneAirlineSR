@@ -26,7 +26,6 @@ public class AirportAvgDriver {
         }
         SimpleDateFormat sdf = new SimpleDateFormat(AirlineConstants.FLT_DATE_PROP_FORMAT);
         sdf.parse(args[5]);
-
     }
 
 
