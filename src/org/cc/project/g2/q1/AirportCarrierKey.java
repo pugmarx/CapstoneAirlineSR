@@ -15,8 +15,6 @@ public class AirportCarrierKey implements WritableComparable<AirportCarrierKey> 
 
     Text origin;
     Text carrier;
-
-
     DoubleWritable avgDepDelay;
 
     public AirportCarrierKey(Text origin, Text carrier) {

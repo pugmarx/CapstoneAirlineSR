@@ -6,13 +6,15 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
+
 import static org.cc.project.common.misc.AirlineConstants.*;
+
 
 public class AirportAvgMapper extends Mapper<Object, Text, AirportDestinationKey, IntWritable> {
 
     // *****************************
-    // * Origin, Dest -> DepDelay *
-    // * 6, 7 -> 8
+    // * Origin, UniqueCarrier -> DepDelay *
+    // * 6, 4 -> 8
     // *****************************
     // NN -> -6 (departed early)
     // NN -> 0

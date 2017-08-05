@@ -45,7 +45,7 @@ public class AirportAvgMapper extends Mapper<Object, Text, Text, IntWritable> {
             val.set(arrDelay);
             //AirportDestinationKey acKey = new AirportDestinationKey(new Text(origin),
             //        new Text(dest));
-            Text acKey = new Text(String.format("%s %s", origin, dest));
+            Text acKey = new Text(String.format("%s,%s", origin, dest));
             context.write(acKey, val);
 
         } catch (NumberFormatException e) {

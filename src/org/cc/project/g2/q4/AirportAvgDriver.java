@@ -7,6 +7,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
@@ -22,7 +23,7 @@ public class AirportAvgDriver {
 
         Configuration conf = new Configuration();
         Job job1 = Job.getInstance(conf, "OriginDepDelayAvg");
-        Job job2 = Job.getInstance(conf, "SortAndReduce");
+        //Job job2 = Job.getInstance(conf, "SortAndReduce");
 
         if (args.length > 3 && StringUtils.isNotBlank(args[2]) && StringUtils.isNotBlank(args[3])) {
             job1.getConfiguration().set(ORIGIN_CODE_PROP, args[2]);
@@ -35,7 +36,8 @@ public class AirportAvgDriver {
         job1.setMapOutputValueClass(IntWritable.class);
 
         job1.setReducerClass(AirportAvgReducer.class);
-        job1.setOutputValueClass(DoubleWritable.class);
+        job1.setOutputKeyClass(Text.class);
+        job1.setOutputValueClass(NullWritable.class);
 
         FileSystem fs = FileSystem.get(conf);
         FileStatus[] fileStatus = fs.listStatus(new Path(args[0]));
@@ -48,5 +50,4 @@ public class AirportAvgDriver {
         System.exit(job1.waitForCompletion(true) ? 0 : 1);
 
     }
-
 }
