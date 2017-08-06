@@ -36,6 +36,11 @@ public class Validator {
     }
 
 
+    public String getFormattedLeg1Date() {
+        SimpleDateFormat inputSDF = new SimpleDateFormat(AirlineConstants.FLT_DATE_INPUT_FORMAT);
+        return inputSDF.format(leg1Date);
+    }
+
     public boolean isValidLegTime(String timeStr, boolean isBefore12) {
         SimpleDateFormat depDateFormat = new SimpleDateFormat(AirlineConstants.FLT_DATE_PROP_FORMAT
                 + TIME_FORMAT);

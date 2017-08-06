@@ -7,11 +7,13 @@ public class AirlineConstants {
 
     //******** command-line props
     public static final String ORIGIN_CODE_PROP = "originCode";
+    public static final String TRANSIT_CODE_PROP = "transitCode";
     public static final String DEST_CODE_PROP = "destCode";
     public static final String FLT_LEG1_DATE_PROP = "flightLeg1Date";
     public static final String FLT_LEG2_DATE_PROP = "flightLeg2Date";
     public static final String FLT_DATE_PROP_FORMAT = "dd/MM/yyyy";
     public static final String FLT_DATE_INPUT_FORMAT = "yyyy-MM-dd";
+    public static final String FLT_TIME_INPUT_FORMAT = "HHmm";
 
     //******** indices
     public static final int YEAR_INDEX = 0;

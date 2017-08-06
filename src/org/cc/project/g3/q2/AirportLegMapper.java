@@ -23,13 +23,13 @@ public class AirportLegMapper extends Mapper<Object, Text, AirportDestinationKey
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
         Text originCodeExtValue = new Text(context.getConfiguration().get(ORIGIN_CODE_PROP));
+        Text transitCodeExtValue = new Text(context.getConfiguration().get(TRANSIT_CODE_PROP));
         Text destCodeExtValue = new Text(context.getConfiguration().get(DEST_CODE_PROP));
         String flightDateExtValue = context.getConfiguration().get(FLT_LEG1_DATE_PROP);
         String leg = context.getConfiguration().get(FLT_LEG_PROP);
 
         String valueString = value.toString();
         String[] singleFlightData = valueString.split(",");
-        //IntWritable val = new IntWritable(0);
 
         try {
             Text origin = new Text(singleFlightData[ORIGIN_INDEX]);
@@ -39,33 +39,34 @@ public class AirportLegMapper extends Mapper<Object, Text, AirportDestinationKey
             Text depTime = new Text(singleFlightData[DEP_TIME_INDEX]);
             Text airline = new Text(singleFlightData[UNIQUE_CARRIER_INDEX]);
             Text fltNum = new Text(singleFlightData[FLIGHT_NUM_INDEX]);
-            //int depDelay = singleFlightData[DEP_DELAY_INDEX].length() != 0 ?
-            //        Double.valueOf(singleFlightData[DEP_DELAY_INDEX]).intValue() : 0;
+
             int arrDelay = singleFlightData[ARR_DELAY_INDEX].length() != 0 ?
                     Double.valueOf(singleFlightData[ARR_DELAY_INDEX]).intValue() : 0;
 
 
-            // Discontinue if irrelevant
-            if (!origin.equals(originCodeExtValue) || !dest.equals(destCodeExtValue)) {
-                return;
-            }
-
             Validator validator = new Validator(flightDateExtValue);
 
             if (leg.equals("leg1")) {
+                // Discontinue if irrelevant
+                if (!origin.equals(originCodeExtValue) || !dest.equals(transitCodeExtValue)) {
+                    return;
+                }
                 if (!validator.isValidLeg1Date(fltDate.toString()) || !validator.isValidLeg1Time(depTime.toString())) {
                     return;
                 }
             } else {
+                // Discontinue if irrelevant
+                if (!origin.equals(transitCodeExtValue) || !dest.equals(destCodeExtValue)) {
+                    return;
+                }
                 if (!validator.isValidLeg2Date(fltDate.toString()) || !validator.isValidLeg2Time(depTime.toString())) {
                     return;
                 }
             }
 
-            //AirportDestinationKey legKey = new AirportDestinationKey(origin, dest,
-            //        new IntWritable(depDelay + arrDelay), airline, fltNum, depTime, fltDate);
-            AirportDestinationKey legKey = new AirportDestinationKey(origin, dest,
-                    new IntWritable(arrDelay), airline, fltNum, depTime, fltDate);
+            AirportDestinationKey legKey = new AirportDestinationKey(originCodeExtValue, transitCodeExtValue,
+                    destCodeExtValue, new IntWritable(arrDelay), airline, fltNum, depTime, fltDate, new Text(leg),
+                    new Text(validator.getFormattedLeg1Date()));
             context.write(legKey, NullWritable.get());
 
         } catch (NumberFormatException e) {

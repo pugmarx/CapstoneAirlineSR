@@ -43,7 +43,8 @@ public class AirportAvgDriver {
 
         // ** leg 1 props
         job1.getConfiguration().set(ORIGIN_CODE_PROP, args[2]);
-        job1.getConfiguration().set(DEST_CODE_PROP, args[3]);
+        job1.getConfiguration().set(TRANSIT_CODE_PROP, args[3]);
+        job1.getConfiguration().set(DEST_CODE_PROP, args[4]);
         job1.getConfiguration().set(FLT_LEG1_DATE_PROP, args[5]);
         job1.getConfiguration().set(FLT_LEG_PROP, "leg1");
         //--
@@ -56,7 +57,10 @@ public class AirportAvgDriver {
         job1.setOutputValueClass(NullWritable.class);
 
         // ** leg 2 props
-        job2.getConfiguration().set(ORIGIN_CODE_PROP, args[3]);
+        //job2.getConfiguration().set(ORIGIN_CODE_PROP, args[3]);
+        //job2.getConfiguration().set(DEST_CODE_PROP, args[4]);
+        job2.getConfiguration().set(ORIGIN_CODE_PROP, args[2]);
+        job2.getConfiguration().set(TRANSIT_CODE_PROP, args[3]);
         job2.getConfiguration().set(DEST_CODE_PROP, args[4]);
         job2.getConfiguration().set(FLT_LEG1_DATE_PROP, args[5]);
         job2.getConfiguration().set(FLT_LEG_PROP, "leg2");
